@@ -1,0 +1,42 @@
+@page "/calculator"
+
+<h3>Calculator</h3>
+
+<div>
+    <label>Enter First Number: </label>
+    <input @bind="firstNumber" />
+</div>
+
+<div>
+    <label>Enter Second Number: </label>
+    <input @bind="secondNumber" />
+</div>
+
+<div>
+    <label>Result: @result</label>
+</div>
+
+<div>
+    <button @onclick="Addition">Add+</button>
+    <button @onclick="Subtraction">Subtract-</button>
+    <button @onclick="Multiplication">Multiply*</button>
+    <button @onclick="Division">Divide/</button>
+</div>
+
+<p style="color: red;">@errorMessage</p>
+
+@code {
+    double firstNumber, secondNumber, result;
+    string errorMessage = "";
+
+    void Addition() => TryCalculate(() => firstNumber + secondNumber);
+    void Subtraction() => TryCalculate(() => firstNumber - secondNumber);
+    void Multiplication() => TryCalculate(() => firstNumber * secondNumber);
+    void Division() => TryCalculate(() => secondNumber == 0 ? throw new DivideByZeroException("Cannot divide by zero.") : firstNumber / secondNumber);
+
+    void TryCalculate(Func<double> operation)
+    {
+        try { result = operation(); errorMessage = ""; }
+        catch (Exception ex) { errorMessage = ex.Message; result = 0; }
+    }
+}
